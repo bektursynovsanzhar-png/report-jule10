@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Отчет за 10 дней — Июль 2026</title>
+<style>
+  :root{
+    --bg:#eef4fb;
+    --card:#ffffff;
+    --border:#d7e6f5;
+    --navy:#173963;
+    --navy-soft:#3a5a80;
+    --blue:#2f6fb0;
+    --blue-soft:#8db9e2;
+    --blue-track:#e3edf7;
+    --green:#6fbf5e;
+    --green-dark:#3f8f3a;
+    --green-track:#e2f2df;
+    --teal:#3aa0a0;
+    --teal-track:#dcf0ef;
+    --gray:#6b7a90;
+    --red:#e2574c;
+    --amber:#e0a63a;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    font-family:'Manrope','Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+    color:var(--navy);
+    padding:28px 0 60px;
+  }
+  .page{ max-width:1300px; margin:0 auto; padding:0 20px; }
+  header.title{ text-align:center; margin-bottom:22px; }
+  header.title h1{ font-size:32px; font-weight:800; letter-spacing:0.5px; margin:0 0 6px; color:var(--navy); }
+  header.title p{ margin:0; color:var(--gray); font-size:14px; }
+  .card{ background:var(--card); border:1px solid var(--border); border-radius:16px; box-shadow:0 2px 10px rgba(23,57,99,0.05); padding:18px 20px; }
+  .section-label{ font-size:15px; font-weight:800; color:var(--navy); text-align:center; letter-spacing:0.3px; margin-bottom:14px; }
+  .big-section-title{
+    text-align:center; font-size:20px; font-weight:800; color:#fff;
+    background:linear-gradient(90deg,var(--navy),var(--blue));
+    padding:12px 20px; border-radius:14px; margin:6px 0 18px; letter-spacing:0.5px;
+  }
+  .row{ display:grid; gap:16px; margin-bottom:16px; }
+  .row-4{ grid-template-columns: repeat(4, 1fr); }
+  .row-3{ grid-template-columns: 1.1fr 1fr 1fr; }
+  .row-top-mkt{ grid-template-columns: repeat(4, 1fr) 1.3fr; }
+
+  .metric{ text-align:center; display:flex; flex-direction:column; align-items:center; gap:8px; }
+  .metric .label{ font-size:12.5px; font-weight:800; color:var(--navy-soft); letter-spacing:0.4px; }
+  .metric .big{ font-size:22px; font-weight:800; color:var(--navy); }
+  .metric .sub{ font-size:11.5px; color:var(--gray); }
+  .ring{ position:relative; width:96px; height:96px; border-radius:50%; margin-top:2px; }
+  .ring-inner{ position:absolute; inset:9px; background:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-direction:column; }
+  .ring-inner .pct{ font-size:16px; font-weight:800; }
+  .ring-caption{ font-size:10.5px; color:var(--gray); }
+
+  .donut-card{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
+  .donut-side{ text-align:center; min-width:80px; }
+  .donut-side .pct{ font-size:24px; font-weight:800; }
+  .donut-side .name{ font-size:12px; font-weight:700; color:var(--navy-soft); margin-top:2px; }
+  .donut-side .amt{ font-size:11.5px; color:var(--gray); margin-top:1px; }
+  .donut-wrap{ position:relative; width:118px; height:118px; flex-shrink:0; }
+  .donut{ width:118px; height:118px; border-radius:50%; }
+  .donut-hole{ position:absolute; inset:20px; background:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; text-align:center; flex-direction:column; }
+  .donut-hole .n{ font-size:17px; font-weight:800; color:var(--navy); }
+  .donut-hole .l{ font-size:9.5px; color:var(--gray); margin-top:1px; }
+
+  table{ width:100%; border-collapse:collapse; font-size:12.5px; }
+  th,td{ padding:8px 10px; text-align:left; border-bottom:1px solid var(--border); }
+  th{ background:#f2f7fc; color:var(--navy-soft); font-weight:800; font-size:11.5px; }
+  td.num, th.num{ text-align:right; }
+  td.pos{ color:var(--green-dark); font-weight:700; }
+  td.neg{ color:var(--red); font-weight:700; }
+  tr:last-child td{ border-bottom:none; }
+  tr.total td{ font-weight:800; background:#f7fafd; }
+
+  .card-title{ font-size:12.5px; font-weight:800; color:var(--navy-soft); text-align:center; margin-bottom:10px; letter-spacing:0.3px; }
+
+  .chart-card svg{ width:100%; height:auto; display:block; }
+  .chart-legend{ display:flex; justify-content:center; gap:16px; font-size:11px; color:var(--gray); margin-top:6px; }
+  .chart-legend .dot{ display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:4px; vertical-align:middle; }
+
+  .daily-table td, .daily-table th{ text-align:center; padding:6px 4px; font-size:11px; }
+  .daily-table td:first-child, .daily-table th:first-child{ text-align:left; font-weight:700; }
+  .daily-table tr.plan-row td{ color:var(--gray); font-size:10px; }
+
+  .conclusions{ display:grid; grid-template-columns:1fr auto; gap:22px; align-items:center; }
+  .conclusions ul{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:9px; }
+  .conclusions li{ font-size:12.5px; display:flex; gap:8px; align-items:flex-start; color:var(--navy-soft); }
+  .conclusions li .dot2{ flex-shrink:0; width:16px;height:16px; border-radius:50%; background:var(--blue); color:#fff; font-size:10px; display:flex;align-items:center;justify-content:center; margin-top:1px; font-weight:800; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="title">
+    <h1>ОТЧЕТ ЗА ПЕРВЫЕ 10 ДНЕЙ ИЮЛЯ 2026</h1>
+    <p>Период: 01.07.2026 – 10.07.2026</p>
+  </header>
+
+  <!-- ================= БЛОК 1: МАРКЕТИНГ / ЛИДЫ ================= -->
+  <div class="big-section-title">1. МАРКЕТИНГ / ЛИДЫ ЗА ДЕКАДУ</div>
+
+  <div class="row row-top-mkt">
+    <div class="card metric">
+      <div class="label">БЮДЖЕТ (ФАКТ)</div>
+      <div class="big">$3 507,62</div>
+      <div class="sub">План: $4 000,00</div>
+      <div class="ring" style="background:conic-gradient(var(--blue) 0% 87.7%, var(--blue-track) 87.7% 100%);">
+        <div class="ring-inner"><div class="pct" style="color:var(--blue)">87,7%</div></div>
+      </div>
+      <div class="ring-caption">% от плана</div>
+    </div>
+
+    <div class="card metric">
+      <div class="label">ЛИДЫ С ТАРГЕТА</div>
+      <div class="big">595</div>
+      <div class="sub">План: 700</div>
+      <div class="ring" style="background:conic-gradient(var(--green) 0% 85%, var(--green-track) 85% 100%);">
+        <div class="ring-inner"><div class="pct" style="color:var(--green-dark)">85,0%</div></div>
+      </div>
+      <div class="ring-caption">% от плана</div>
+    </div>
+
+    <div class="card metric">
+      <div class="label">ЛИДЫ (ВСЕ)</div>
+      <div class="big">715</div>
+      <div class="sub">План: 820</div>
+      <div class="ring" style="background:conic-gradient(var(--teal) 0% 87.2%, var(--teal-track) 87.2% 100%);">
+        <div class="ring-inner"><div class="pct" style="color:var(--teal)">87,2%</div></div>
+      </div>
+      <div class="ring-caption">% от плана</div>
+    </div>
+
+    <div class="card metric">
+      <div class="label">CPL (ФАКТ)</div>
+      <div class="big">$5,90</div>
+      <div class="sub">План: $5,50</div>
+      <div class="ring" style="background:conic-gradient(var(--red) 0% 100%);">
+        <div class="ring-inner"><div class="pct" style="color:var(--red)">+7,3%</div></div>
+      </div>
+      <div class="ring-caption">к плану (хуже плана)</div>
+    </div>
+
+    <div class="card donut-card">
+      <div class="donut-side">
+        <div class="pct" style="color:var(--blue)">73%</div>
+        <div class="name">Алматы</div>
+        <div class="amt">$2 558,56</div>
+      </div>
+      <div class="donut-wrap">
+        <div class="donut" style="background:conic-gradient(var(--blue) 0% 73%, var(--blue-soft) 73% 100%);"></div>
+        <div class="donut-hole"><div class="n">$3 507,62</div><div class="l">бюджет всего</div></div>
+      </div>
+      <div class="donut-side">
+        <div class="pct" style="color:var(--blue-soft)">27%</div>
+        <div class="name">Казахстан</div>
+        <div class="amt">$949,06</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ---- Динамика (мини-графики) ---- -->
+  <div class="row row-4">
+    <div class="card chart-card">
+      <div class="card-title">ДИНАМИКА БЮДЖЕТА</div>
+      <svg viewBox="0 0 300 140">
+        <line x1="30" y1="40.0" x2="290" y2="40.0" stroke="#b9c8dd" stroke-width="1.3" stroke-dasharray="4,3"/>
+        <polyline points="30.0,37.3 58.9,51.1 87.8,59.8 116.7,61.9 145.6,65.9 174.4,34.3 203.3,29.5 232.2,42.5 261.1,61.0 290.0,55.1" fill="none" stroke="var(--blue)" stroke-width="2"/>
+      </svg>
+      <div class="chart-legend"><span><span class="dot" style="background:var(--blue)"></span>Факт</span><span><span class="dot" style="background:#b9c8dd"></span>План</span></div>
+    </div>
+
+    <div class="card chart-card">
+      <div class="card-title">ДИНАМИКА ЛИДОВ С ТАРГЕТА</div>
+      <svg viewBox="0 0 300 140">
+        <line x1="30" y1="34.4" x2="290" y2="34.4" stroke="#b9c8dd" stroke-width="1.3" stroke-dasharray="4,3"/>
+        <polyline points="30.0,32.0 58.9,56.4 87.8,47.9 116.7,51.6 145.6,55.2 174.4,40.6 203.3,33.2 232.2,54.0 261.1,66.2 290.0,35.7" fill="none" stroke="var(--green-dark)" stroke-width="2"/>
+      </svg>
+      <div class="chart-legend"><span><span class="dot" style="background:var(--green-dark)"></span>Факт</span><span><span class="dot" style="background:#b9c8dd"></span>План</span></div>
+    </div>
+
+    <div class="card chart-card">
+      <div class="card-title">ДИНАМИКА ЛИДОВ (ВСЕ)</div>
+      <svg viewBox="0 0 300 140">
+        <line x1="30" y1="29.8" x2="290" y2="29.8" stroke="#b9c8dd" stroke-width="1.3" stroke-dasharray="4,3"/>
+        <polyline points="30.0,27.6 58.9,48.5 87.8,46.3 116.7,40.8 145.6,51.8 174.4,32.0 203.3,23.2 232.2,50.7 261.1,61.7 290.0,30.9" fill="none" stroke="var(--teal)" stroke-width="2"/>
+      </svg>
+      <div class="chart-legend"><span><span class="dot" style="background:var(--teal)"></span>Факт</span><span><span class="dot" style="background:#b9c8dd"></span>План</span></div>
+    </div>
+
+    <div class="card chart-card">
+      <div class="card-title">ДИНАМИКА CPL</div>
+      <svg viewBox="0 0 300 140">
+        <line x1="30" y1="44.4" x2="290" y2="44.4" stroke="#b9c8dd" stroke-width="1.3" stroke-dasharray="4,3"/>
+        <polyline points="30.0,41.1 58.9,29.0 87.8,49.9 116.7,48.6 145.6,49.9 174.4,29.4 203.3,32.3 232.2,21.4 261.1,27.7 290.0,55.4" fill="none" stroke="var(--red)" stroke-width="2"/>
+      </svg>
+      <div class="chart-legend"><span><span class="dot" style="background:var(--red)"></span>Факт</span><span><span class="dot" style="background:#b9c8dd"></span>План</span></div>
+    </div>
+  </div>
+
+  <!-- ---- Таблица по дням ---- -->
+  <div class="card" style="margin-bottom:16px; overflow-x:auto;">
+    <div class="card-title">ПОКАЗАТЕЛИ ПО ДНЯМ</div>
+    <table class="daily-table">
+      <tr><th>Показатель</th><th>01.07</th><th>02.07</th><th>03.07</th><th>04.07</th><th>05.07</th><th>06.07</th><th>07.07</th><th>08.07</th><th>09.07</th><th>10.07</th><th>Итого</th><th>План</th><th>%</th></tr>
+      <tr><td>Бюджет, $ (факт)</td><td>413,39</td><td>344,31</td><td>300,93</td><td>290,58</td><td>270,27</td><td>428,42</td><td>452,63</td><td>387,25</td><td>295,21</td><td>324,63</td><td><b>3 507,62</b></td><td>4 000,00</td><td>87,7%</td></tr>
+      <tr class="plan-row"><td>план/день $400</td><td colspan="10">— план по $400,00 в день —</td><td></td><td></td><td></td></tr>
+      <tr><td>Лиды с таргета (факт)</td><td>72</td><td>52</td><td>59</td><td>56</td><td>53</td><td>65</td><td>71</td><td>54</td><td>44</td><td>69</td><td><b>595</b></td><td>700</td><td>85,0%</td></tr>
+      <tr class="plan-row"><td>план/день 70</td><td colspan="10">— план по 70 в день —</td><td></td><td></td><td></td></tr>
+      <tr><td>Лиды (все), факт</td><td>84</td><td>65</td><td>67</td><td>72</td><td>62</td><td>80</td><td>88</td><td>63</td><td>53</td><td>81</td><td><b>715</b></td><td>820</td><td>87,2%</td></tr>
+      <tr class="plan-row"><td>план/день 82</td><td colspan="10">— план по 82 в день —</td><td></td><td></td><td></td></tr>
+      <tr><td>CPL, $ (факт)</td><td>5,74</td><td>6,62</td><td>5,10</td><td>5,19</td><td>5,10</td><td>6,59</td><td>6,38</td><td>7,17</td><td>6,71</td><td>4,70</td><td><b>5,90</b></td><td>5,50</td><td class="neg">+7,3%</td></tr>
+    </table>
+  </div>
+
+  <!-- ---- Итоги маркетинга ---- -->
+  <div class="card" style="margin-bottom:16px;">
+    <div class="card-title" style="text-align:left;">ИТОГИ ПО МАРКЕТИНГУ ЗА ДЕКАДУ</div>
+    <p style="font-size:12.5px; color:var(--navy-soft); line-height:1.6; margin:0;">
+      Все показатели выполнены на 85–87% от плана: бюджет $3 507,62 (87,7%), лиды с таргета 595 (85,0%), лиды всего 715 (87,2%).
+      CPL превысил план на 7,3% ($5,90 против $5,50) — лиды обходятся дороже, чем планировали.
+      Основной объём бюджета направлен на Алматы (73%, $2 558,56), Казахстан получил 27% ($949,06).
+    </p>
+  </div>
+
+  <!-- ================= БЛОК 2: ПРОДАЖИ ================= -->
+  <div class="big-section-title">2. ПРОДАЖИ ЗА 10 ДНЕЙ</div>
+
+  <div class="row row-4">
+    <div class="card metric">
+      <div class="label">ВЫРУЧКА (ОБЩАЯ)</div>
+      <div class="big">11 428 000 тг</div>
+      <div class="sub">План на 10 дней: 18 387 000 тг</div>
+      <div class="ring" style="background:conic-gradient(var(--red) 0% 62.2%, #fbe2df 62.2% 100%);">
+        <div class="ring-inner"><div class="pct" style="color:var(--red)">62,2%</div></div>
+      </div>
+      <div class="ring-caption">% от плана 10 дней</div>
+    </div>
+
+    <div class="card metric">
+      <div class="label">ОФФЛАЙН</div>
+      <div class="big">6 150 000 тг</div>
+      <div class="sub">План на 10 дней: 11 935 500 тг</div>
+      <div class="ring" style="background:conic-gradient(var(--red) 0% 51.5%, #fbe2df 51.5% 100%);">
+        <div class="ring-inner"><div class="pct" style="color:var(--red)">51,5%</div></div>
+      </div>
+      <div class="ring-caption">% от плана 10 дней</div>
+    </div>
+
+    <div class="card metric">
+      <div class="label">ОНЛАЙН</div>
+      <div class="big">5 278 000 тг</div>
+      <div class="sub">План на 10 дней: 6 450 000 тг</div>
+      <div class="ring" style="background:conic-gradient(var(--green) 0% 81.8%, var(--green-track) 81.8% 100%);">
+        <div class="ring-inner"><div class="pct" style="color:var(--green-dark)">81,8%</div></div>
+      </div>
+      <div class="ring-caption">% от плана 10 дней</div>
+    </div>
+
+    <div class="card metric">
+      <div class="label">КОЛ-ВО ПРОДАЖ</div>
+      <div class="big">40</div>
+      <div class="sub">Оффлайн 22 · Онлайн 18</div>
+      <div class="ring" style="background:conic-gradient(var(--teal) 0% 63.5%, var(--teal-track) 63.5% 100%);">
+        <div class="ring-inner"><div class="pct" style="color:var(--teal)">63,5%</div></div>
+      </div>
+      <div class="ring-caption">% от плана 10 дней (≈63 продажи)</div>
+    </div>
+  </div>
+
+  <div class="row row-3">
+    <div class="card">
+      <div class="card-title">ОТСТАВАНИЕ ОТ ПЛАНА (10 ДНЕЙ), В ТЕНГЕ</div>
+      <table>
+        <tr><th>Показатель</th><th class="num">План (10 дн)</th><th class="num">Факт (10 дн)</th><th class="num">Отставание, тг</th><th class="num">Отставание, %</th></tr>
+        <tr class="total"><td>Общее</td><td class="num">18 387 000</td><td class="num">11 428 000</td><td class="num neg">-6 959 000</td><td class="num neg">-37,9%</td></tr>
+        <tr><td>Оффлайн</td><td class="num">11 935 500</td><td class="num">6 150 000</td><td class="num neg">-5 785 500</td><td class="num neg">-48,5%</td></tr>
+        <tr><td>Онлайн</td><td class="num">6 450 000</td><td class="num">5 278 000</td><td class="num neg">-1 172 000</td><td class="num neg">-18,2%</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-title">СТРУКТУРА ОТСТАВАНИЯ</div>
+      <div style="display:flex; justify-content:center; margin-bottom:6px;">
+        <div class="donut-wrap">
+          <div class="donut" style="background:conic-gradient(var(--red) 0% 83.1%, var(--amber) 83.1% 100%);"></div>
+          <div class="donut-hole"><div class="n">-6 959 000</div><div class="l">тг всего</div></div>
+        </div>
+      </div>
+      <div style="display:flex; justify-content:space-around; font-size:12px; margin-top:8px;">
+        <div style="text-align:center;"><b style="color:var(--red)">83,1%</b><br><span style="color:var(--gray)">Оффлайн (-5 785 500)</span></div>
+        <div style="text-align:center;"><b style="color:var(--amber)">16,9%</b><br><span style="color:var(--gray)">Онлайн (-1 172 000)</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">ВЫПОЛНЕНИЕ ПЛАНА, %</div>
+      <div style="display:flex; flex-direction:column; gap:14px; padding:6px 4px;">
+        <div>
+          <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px; color:var(--navy-soft); font-weight:700;"><span>Оффлайн</span><span>51,5%</span></div>
+          <div style="height:14px; background:var(--blue-track); border-radius:8px; overflow:hidden;"><div style="height:100%; width:51.5%; background:var(--red); border-radius:8px;"></div></div>
+        </div>
+        <div>
+          <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px; color:var(--navy-soft); font-weight:700;"><span>Онлайн</span><span>81,8%</span></div>
+          <div style="height:14px; background:var(--blue-track); border-radius:8px; overflow:hidden;"><div style="height:100%; width:81.8%; background:var(--green); border-radius:8px;"></div></div>
+        </div>
+        <div>
+          <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px; color:var(--navy-soft); font-weight:700;"><span>Общее</span><span>62,2%</span></div>
+          <div style="height:14px; background:var(--blue-track); border-radius:8px; overflow:hidden;"><div style="height:100%; width:62.2%; background:var(--amber); border-radius:8px;"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ---- Выводы ---- -->
+  <div class="card conclusions">
+    <div>
+      <div class="card-title" style="text-align:left; margin-bottom:12px;">ВЫВОДЫ ЗА 10 ДНЕЙ</div>
+      <ul>
+        <li><span class="dot2">✓</span>Маркетинг: бюджет, лиды таргет и лиды всего выполнены на 85–87% от плана декады — близко к плану.</li>
+        <li><span class="dot2">✓</span>CPL вырос на 7,3% выше плана ($5,90 против $5,50) — лиды дорожают, стоит проверить креативы и настройки таргета.</li>
+        <li><span class="dot2">✓</span>Продажи отстают от плана заметнее, чем лиды: общая выручка выполнена на 62,2%, отставание -6 959 000 тг.</li>
+        <li><span class="dot2">✓</span>Оффлайн — основная проблема: выполнение всего 51,5% плана, это 83,1% всего отставания в деньгах (-5 785 500 тг).</li>
+        <li><span class="dot2">✓</span>Онлайн держит темп заметно лучше (81,8% от плана), отставание всего -1 172 000 тг (16,9% от общего отставания).</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ================= БЛОК 3: КОНВЕРСИЯ ЛИДОВ В ПРОДАЖИ ================= -->
+  <div class="big-section-title">3. КОНВЕРСИЯ ЛИДОВ В ПРОДАЖИ ПО КАНАЛАМ</div>
+
+  <div class="row row-4">
+    <div class="card metric">
+      <div class="label">ВСЕГО ЛИДОВ ЗА 10 ДНЕЙ</div>
+      <div class="big">715</div>
+      <div class="sub">Источник продаж в рамках декады</div>
+    </div>
+
+    <div class="card metric">
+      <div class="label">ПЕРЕШЛИ В ПРОДАЖИ</div>
+      <div class="big">11</div>
+      <div class="sub">На сумму 3 997 780 тг</div>
+      <div class="ring" style="background:conic-gradient(var(--teal) 0% 1.54%, var(--teal-track) 1.54% 100%);">
+        <div class="ring-inner"><div class="pct" style="color:var(--teal)">1,54%</div></div>
+      </div>
+      <div class="ring-caption">конверсия лид→продажа</div>
+    </div>
+
+    <div class="card metric">
+      <div class="label">ОНЛАЙН</div>
+      <div class="big">5 продаж</div>
+      <div class="sub">На сумму 1 239 500 тг</div>
+    </div>
+
+    <div class="card metric">
+      <div class="label">ОФФЛАЙН</div>
+      <div class="big">6 продаж</div>
+      <div class="sub">На сумму 2 758 280 тг</div>
+    </div>
+  </div>
+
+  <div class="row row-3">
+    <div class="card">
+      <div class="card-title">ПРОДАЖИ ИЗ ЛИДОВ ПО КАНАЛАМ</div>
+      <table>
+        <tr><th>Канал</th><th class="num">Продажи, шт</th><th class="num">Сумма, тг</th><th class="num">Средний чек, тг</th><th class="num">Доля продаж</th></tr>
+        <tr><td>Онлайн</td><td class="num">5</td><td class="num">1 239 500</td><td class="num">247 900</td><td class="num">45,5%</td></tr>
+        <tr><td>Оффлайн</td><td class="num">6</td><td class="num">2 758 280</td><td class="num">459 713</td><td class="num">54,5%</td></tr>
+        <tr class="total"><td>Итого</td><td class="num">11</td><td class="num">3 997 780</td><td class="num">363 435</td><td class="num">100%</td></tr>
+      </table>
+    </div>
+
+    <div class="card donut-card">
+      <div class="donut-side">
+        <div class="pct" style="color:var(--blue)">54,5%</div>
+        <div class="name">Оффлайн</div>
+        <div class="amt">6 продаж</div>
+      </div>
+      <div class="donut-wrap">
+        <div class="donut" style="background:conic-gradient(var(--blue) 0% 54.5%, var(--green) 54.5% 100%);"></div>
+        <div class="donut-hole"><div class="n">11</div><div class="l">продаж из лидов</div></div>
+      </div>
+      <div class="donut-side">
+        <div class="pct" style="color:var(--green-dark)">45,5%</div>
+        <div class="name">Онлайн</div>
+        <div class="amt">5 продаж</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">СУММА ПО КАНАЛАМ, ТГ</div>
+      <div style="display:flex; flex-direction:column; gap:14px; padding:6px 4px;">
+        <div>
+          <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px; color:var(--navy-soft); font-weight:700;"><span>Оффлайн</span><span>2 758 280 тг</span></div>
+          <div style="height:14px; background:var(--blue-track); border-radius:8px; overflow:hidden;"><div style="height:100%; width:69%; background:var(--blue); border-radius:8px;"></div></div>
+        </div>
+        <div>
+          <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px; color:var(--navy-soft); font-weight:700;"><span>Онлайн</span><span>1 239 500 тг</span></div>
+          <div style="height:14px; background:var(--blue-track); border-radius:8px; overflow:hidden;"><div style="height:100%; width:31%; background:var(--green); border-radius:8px;"></div></div>
+        </div>
+      </div>
+      <p style="font-size:11px; color:var(--gray); margin:12px 0 0;">Оффлайн даёт меньше продаж по количеству (6 vs 5), но заметно больше по сумме (69% против 31%) — за счёт более крупного среднего чека (459 713 тг против 247 900 тг).</p>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:16px;">
+    <div class="card-title" style="text-align:left;">КОММЕНТАРИЙ</div>
+    <p style="font-size:12.5px; color:var(--navy-soft); line-height:1.6; margin:0;">
+      Из 715 лидов, полученных за первые 10 дней июля, в продажи в рамках этого же периода перешли пока 11 (1,54%) — это ожидаемо низкий показатель,
+      так как часть лидов конвертируется в продажи позже, вне рамок декады (как и в июньской аналитике, где итоговая конверсия за полный месяц была 4,27%).
+      Оффлайн уже сейчас даёт более крупный средний чек (459 713 тг против 247 900 тг в онлайне) и большую долю выручки (69%) при меньшем количестве лидов на конверсии.
+    </p>
+  </div>
+
+  <!-- ================= БЛОК 4: ЗАПИСИ НА ПУ ================= -->
+  <div class="big-section-title">4. ЗАПИСИ НА ПРОБНЫЙ УРОК (ПУ)</div>
+
+  <div class="row row-4">
+    <div class="card metric">
+      <div class="label">ЗАПИСАЛОСЬ ВСЕГО</div>
+      <div class="big">248</div>
+      <div class="sub">Оффлайн 74 · Онлайн 174</div>
+    </div>
+
+    <div class="card metric">
+      <div class="label">ДОШЛИ ВСЕГО</div>
+      <div class="big">142</div>
+      <div class="sub">Доходимость 57,3%</div>
+      <div class="ring" style="background:conic-gradient(var(--teal) 0% 57.3%, var(--teal-track) 57.3% 100%);">
+        <div class="ring-inner"><div class="pct" style="color:var(--teal)">57,3%</div></div>
+      </div>
+      <div class="ring-caption">доходимость</div>
+    </div>
+
+    <div class="card metric">
+      <div class="label">КУПИЛИ ВСЕГО</div>
+      <div class="big">20</div>
+      <div class="sub">Оффлайн 11 · Онлайн 9</div>
+      <div class="ring" style="background:conic-gradient(var(--green) 0% 14.1%, var(--green-track) 14.1% 100%);">
+        <div class="ring-inner"><div class="pct" style="color:var(--green-dark)">14,1%</div></div>
+      </div>
+      <div class="ring-caption">% от дошедших</div>
+    </div>
+
+    <div class="card metric">
+      <div class="label">КОНВЕРСИЯ ЗАПИСЬ→ПОКУПКА</div>
+      <div class="big" style="font-size:20px;">8,1%</div>
+      <div class="sub">20 из 248 записавшихся</div>
+    </div>
+  </div>
+
+  <div class="row row-3">
+    <div class="card">
+      <div class="card-title">ВОРОНКА ПУ ПО КАНАЛАМ</div>
+      <table>
+        <tr><th>Канал</th><th class="num">Записалось</th><th class="num">Дошли</th><th class="num">Доходимость</th><th class="num">Купили</th><th class="num">Дошли→купили</th></tr>
+        <tr><td>Оффлайн</td><td class="num">74</td><td class="num">47</td><td class="num pos">63,5%</td><td class="num">11</td><td class="num pos">23,4%</td></tr>
+        <tr><td>Онлайн</td><td class="num">174</td><td class="num">95</td><td class="num neg">54,6%</td><td class="num">9</td><td class="num neg">9,5%</td></tr>
+        <tr class="total"><td>Итого</td><td class="num">248</td><td class="num">142</td><td class="num">57,3%</td><td class="num">20</td><td class="num">14,1%</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-title">СТРУКТУРА ЗАПИСЕЙ</div>
+      <div style="display:flex; justify-content:center; margin-bottom:6px;">
+        <div class="donut-wrap">
+          <div class="donut" style="background:conic-gradient(var(--blue) 0% 29.8%, var(--green) 29.8% 100%);"></div>
+          <div class="donut-hole"><div class="n">248</div><div class="l">записей всего</div></div>
+        </div>
+      </div>
+      <div style="display:flex; justify-content:space-around; font-size:12px; margin-top:8px;">
+        <div style="text-align:center;"><b style="color:var(--blue)">74 (29,8%)</b><br><span style="color:var(--gray)">Оффлайн</span></div>
+        <div style="text-align:center;"><b style="color:var(--green-dark)">174 (70,2%)</b><br><span style="color:var(--gray)">Онлайн</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">ВОРОНКА: ЗАПИСАЛОСЬ → ДОШЛИ → КУПИЛИ</div>
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <div style="width:80px; font-size:11px; font-weight:700; color:var(--navy-soft); flex-shrink:0;">Офф. зап.</div>
+          <div style="flex:1; background:var(--blue-track); border-radius:7px; height:20px; overflow:hidden;"><div style="height:100%; width:100%; background:var(--blue-soft); border-radius:7px; display:flex; align-items:center; justify-content:flex-end; padding-right:8px; color:#fff; font-size:10px; font-weight:800;">74</div></div>
+        </div>
+        <div style="display:flex; align-items:center; gap:10px;">
+          <div style="width:80px; font-size:11px; font-weight:700; color:var(--navy-soft); flex-shrink:0;">Офф. дошли</div>
+          <div style="flex:1; background:var(--blue-track); border-radius:7px; height:20px; overflow:hidden;"><div style="height:100%; width:63.5%; background:var(--blue); border-radius:7px; display:flex; align-items:center; justify-content:flex-end; padding-right:8px; color:#fff; font-size:10px; font-weight:800;">47</div></div>
+        </div>
+        <div style="display:flex; align-items:center; gap:10px;">
+          <div style="width:80px; font-size:11px; font-weight:700; color:var(--navy-soft); flex-shrink:0;">Офф. купили</div>
+          <div style="flex:1; background:var(--blue-track); border-radius:7px; height:20px; overflow:hidden;"><div style="height:100%; width:14.9%; background:var(--navy); border-radius:7px; display:flex; align-items:center; justify-content:flex-end; padding-right:8px; color:#fff; font-size:10px; font-weight:800;">11</div></div>
+        </div>
+        <div style="display:flex; align-items:center; gap:10px;">
+          <div style="width:80px; font-size:11px; font-weight:700; color:var(--navy-soft); flex-shrink:0;">Онл. зап.</div>
+          <div style="flex:1; background:var(--blue-track); border-radius:7px; height:20px; overflow:hidden;"><div style="height:100%; width:100%; background:#a9dba0; border-radius:7px; display:flex; align-items:center; justify-content:flex-end; padding-right:8px; color:#fff; font-size:10px; font-weight:800;">174</div></div>
+        </div>
+        <div style="display:flex; align-items:center; gap:10px;">
+          <div style="width:80px; font-size:11px; font-weight:700; color:var(--navy-soft); flex-shrink:0;">Онл. дошли</div>
+          <div style="flex:1; background:var(--blue-track); border-radius:7px; height:20px; overflow:hidden;"><div style="height:100%; width:54.6%; background:var(--green); border-radius:7px; display:flex; align-items:center; justify-content:flex-end; padding-right:8px; color:#fff; font-size:10px; font-weight:800;">95</div></div>
+        </div>
+        <div style="display:flex; align-items:center; gap:10px;">
+          <div style="width:80px; font-size:11px; font-weight:700; color:var(--navy-soft); flex-shrink:0;">Онл. купили</div>
+          <div style="flex:1; background:var(--blue-track); border-radius:7px; height:20px; overflow:hidden;"><div style="height:100%; width:5.2%; background:var(--green-dark); border-radius:7px; display:flex; align-items:center; justify-content:flex-end; padding-right:8px; color:#fff; font-size:10px; font-weight:800;">9</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:16px;">
+    <div class="card-title" style="text-align:left;">КОММЕНТАРИЙ</div>
+    <p style="font-size:12.5px; color:var(--navy-soft); line-height:1.6; margin:0;">
+      Оффлайн работает эффективнее онлайна на каждом этапе воронки ПУ: доходимость выше (63,5% против 54,6%), и конверсия дошедших в покупку почти в 2,5 раза выше
+      (23,4% против 9,5%). При этом онлайн формирует 70,2% всех записей (174 из 248) — большой объём, но низкое качество конверсии.
+      Стоит проверить, что именно снижает конверсию в онлайне: качество ведущего урок, вовлечённость на самом уроке или follow-up после него.
+    </p>
+  </div>
+
+  <!-- ================= БЛОК 5: ПЛАН НА ВТОРЫЕ 10 ДНЕЙ ================= -->
+  <div class="big-section-title">5. ПЛАН НА ВТОРЫЕ 10 ДНЕЙ ИЮЛЯ (С УЧЁТОМ ОТСТАВАНИЯ)</div>
+  <div class="section-label">11.07.2026 – 20.07.2026 · Отставание за 1-ю декаду: -6 959 000 тг</div>
+
+  <div class="row row-3">
+    <div class="card">
+      <div class="card-title" style="text-align:left;">БАЗОВЫЙ ПЛАН (БЕЗ ДОГОНА)</div>
+      <p style="font-size:11.5px; color:var(--gray); margin:0 0 10px;">Если просто повторить план 1-й декады — отставание не сократится, а перенесётся на 3-ю декаду.</p>
+      <table>
+        <tr><th>Канал</th><th class="num">План (10 дн)</th></tr>
+        <tr><td>Оффлайн</td><td class="num">11 935 500</td></tr>
+        <tr><td>Онлайн</td><td class="num">6 450 000</td></tr>
+        <tr class="total"><td>Итого</td><td class="num">18 387 000</td></tr>
+      </table>
+    </div>
+
+    <div class="card" style="border:2px solid var(--teal);">
+      <div class="card-title" style="text-align:left; color:var(--teal);">УМЕРЕННЫЙ ДОГОН (РЕКОМЕНДУЕМЫЙ)</div>
+      <p style="font-size:11.5px; color:var(--gray); margin:0 0 10px;">Отставание распределяется равномерно на оставшиеся 21 день месяца (2-я + 3-я декады).</p>
+      <table>
+        <tr><th>Канал</th><th class="num">План (10 дн)</th><th class="num">Прирост к базе</th></tr>
+        <tr><td>Оффлайн</td><td class="num">14 690 476</td><td class="num pos">+23,1%</td></tr>
+        <tr><td>Онлайн</td><td class="num">7 010 476</td><td class="num pos">+8,7%</td></tr>
+        <tr class="total"><td>Итого</td><td class="num">21 700 952</td><td class="num pos">+18,0%</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-title" style="text-align:left;">АГРЕССИВНЫЙ ДОГОН</div>
+      <p style="font-size:11.5px; color:var(--gray); margin:0 0 10px;">Всё отставание закрывается именно за эти 10 дней, 3-я декада идёт по обычному плану.</p>
+      <table>
+        <tr><th>Канал</th><th class="num">План (10 дн)</th><th class="num">Прирост к базе</th></tr>
+        <tr><td>Оффлайн</td><td class="num">17 721 000</td><td class="num neg">+48,5%</td></tr>
+        <tr><td>Онлайн</td><td class="num">7 622 000</td><td class="num neg">+18,2%</td></tr>
+        <tr class="total"><td>Итого</td><td class="num">25 343 000</td><td class="num neg">+37,8%</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="row row-3">
+    <div class="card metric">
+      <div class="label">РЕКОМЕНДУЕМЫЙ ПЛАН НА ДЕКАДУ</div>
+      <div class="big">21 700 952 тг</div>
+      <div class="sub">Оффлайн 14 690 476 · Онлайн 7 010 476</div>
+    </div>
+    <div class="card metric">
+      <div class="label">ДНЕВНОЙ ТЕМП (УМЕРЕННЫЙ)</div>
+      <div class="big">≈2 170 095 тг/день</div>
+      <div class="sub">Оффлайн ≈1 469 048 · Онлайн ≈701 048</div>
+    </div>
+    <div class="card metric">
+      <div class="label">ЦЕЛЬ НА КОНЕЦ 20.07</div>
+      <div class="big">33 128 952 тг</div>
+      <div class="sub">Нарастающим итогом с начала месяца (57 000 000 план на 31 день)</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:16px;">
+    <div class="card-title" style="text-align:left;">КОММЕНТАРИЙ</div>
+    <p style="font-size:12.5px; color:var(--navy-soft); line-height:1.6; margin:0;">
+      Месячный план 57 000 000 тг рассчитан на 31 день (≈1 838 700 тг/день), поэтому базовый план на любую декаду — 18 387 000 тг.
+      Так как за первые 10 дней факт составил 11 428 000 тг (отставание -6 959 000 тг), просто повторить базовый план недостаточно — так отставание перейдёт на 3-ю декаду.
+      Рекомендуемый (умеренный) сценарий распределяет весь долг на оставшиеся 21 день: план на вторую декаду — <b>21 700 952 тг</b> (+18% к базовому плану), из них оффлайн <b>14 690 476 тг</b> (+23,1%, так как именно оффлайн создал 83% отставания) и онлайн <b>7 010 476 тг</b> (+8,7%).
+      Агрессивный сценарий (закрыть весь долг за 10 дней) требует роста оффлайна на 48,5% — это уже рискованно для отдела, который и так не дотягивает до обычного плана; рекомендуем умеренный вариант и удержание темпа онлайна, который уже близок к своему плану.
+    </p>
+  </div>
+
+</div>
+</body>
+</html>
